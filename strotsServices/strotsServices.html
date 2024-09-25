@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Followers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            margin-top: 50px;
+        }
+        .logos {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin: 20px 0;
+        }
+        .logo {
+            width: 150px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .logo:hover {
+            transform: scale(1.2);
+        }
+        .logo img {
+            width: 100%;
+        }
+        #follower-input {
+            display: none;
+            margin-top: 50px;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .animate-logo {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: moveToLeft 1s forwards ease;
+        }
+        @keyframes moveToLeft {
+            from {
+                left: 50%;
+            }
+            to {
+                left: 10%;
+            }
+        }
+        .fall {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            animation: fall 1s ease forwards;
+        }
+        @keyframes fall {
+            from {
+                top: 0;
+            }
+            to {
+                top: 100%;
+            }
+        }
+        .buy-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .buy-section button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .buy-section button:hover {
+            background-color: darkgreen;
+        }
+        #paypal-section {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Buy Followers</h1>
+
+    <div class="logos">
+        <div class="logo" onclick="selectPlatform('TikTok')"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok"></div>
+        <div class="logo" onclick="selectPlatform('YouTube')"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube"></div>
+        <div class="logo" onclick="selectPlatform('Twitch')"><img src="https://www.bing.com/images/search?view=detailV2&ccid=y4PIawtC&id=AD1DCDB0A78A3542E368BCFA67A4EDBCFC0CB2A0&thid=OIP.y4PIawtCttilMfZDFgfk1QHaEK&mediaurl=https%3a%2f%2flogolook.net%2fwp-content%2fuploads%2f2021%2f06%2fTwitch-Logo.png&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.cb83c86b0b42b6d8a531f6431607e4d5%3frik%3doLIM%252fLztpGf6vA%26pid%3dImgRaw%26r%3d0&exph=2160&expw=3840&q=twitch+logo+svg&simid=608007133349351972&FORM=IRPRST&ck=4334911E64CE6E05C1AC9C37C4695EFE&selectedIndex=0&itb=1&idpp=overlayview&ajaxhist=0&ajaxserp=0" alt="Twitch"></div>
+    </div>
+
+    <div id="follower-input">
+        <h2 id="platform-title"></h2>
+        <p>Enter the number of followers:</p>
+        <input type="number" id="followers" min="1000" step="1000" placeholder="Enter followers count" oninput="calculateTotal()">
+        <p>Price per 1000 followers: £2.00</p>
+        <p>Total Price: £<span id="total-price">0.00</span></p>
+        <div class="buy-section">
+            <button onclick="enterUsername()">Next</button>
+        </div>
+    </div>
+
+    <div id="paypal-section">
+        <p>Enter your <span id="platform-name"></span> account name:</p>
+        <input type="text" id="username" placeholder="Enter your username">
+        <button onclick="redirectToPayPal()">Buy Now</button>
+    </div>
+
+    <script>
+        let selectedPlatform = '';
+        let pricePerThousand = 2.00;
+
+        function selectPlatform(platform) {
+            selectedPlatform = platform;
+            document.getElementById('platform-title').innerText = platform + ' Followers';
+            document.getElementById('follower-input').style.display = 'block';
+            
+            // Animate selected platform logo
+            let logoDivs = document.querySelectorAll('.logo');
+            logoDivs.forEach((logo, index) => {
+                if (logo.querySelector('img').alt === platform) {
+                    logo.classList.add('animate-logo');
+                } else {
+                    logo.classList.add('fall');
+                }
+            });
+        }
+
+        function calculateTotal() {
+            let followers = document.getElementById('followers').value;
+            let totalPrice = (followers / 1000) * pricePerThousand;
+            document.getElementById('total-price').innerText = totalPrice.toFixed(2);
+
+            // Show Next button when followers are entered
+            if (followers >= 1000) {
+                document.querySelector('.buy-section').style.display = 'block';
+            } else {
+                document.querySelector('.buy-section').style.display = 'none';
+            }
+        }
+
+        function enterUsername() {
+            document.getElementById('platform-name').innerText = selectedPlatform;
+            document.getElementById('paypal-section').style.display = 'block';
+        }
+
+        function redirectToPayPal() {
+            let followers = document.getElementById('followers').value;
+            let totalPrice = (followers / 1000) * pricePerThousand;
+            let username = document.getElementById('username').value;
+
+            if (username) {
+                let paypalLink = `https://www.paypal.me/EvanStrots/${totalPrice.toFixed(2)}`;
+                window.location.href = paypalLink;
+            } else {
+                alert('Please enter your account username.');
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
